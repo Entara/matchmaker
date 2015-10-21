@@ -82,10 +82,12 @@ if(isset($_POST["name"]) && isset($_POST["decision"])) {
         //$valid_timestep = $current_timestamp - (15 * 60); // -15 min
         $valid_timestep = date('Y-m-d H:i:s', strtotime("-15 minutes")); // -15 min
 
+        $name = $_POST["name"];
+
         $results = array();
         // select unique names -> if we use IDs, multiple entries by same name would count multiple
         // currently only one name, thats why we have to select ID, change that later
-        $sql = "SELECT COUNT(id) AS match_count from data WHERE timestamp >='".$valid_timestep."';";
+        $sql = "SELECT COUNT(id) AS match_count from data WHERE name !='".$name."' AND timestamp >='".$valid_timestep."';";
         $query_result = $db->query($sql);
         while($row = $query_result->fetchArray(SQLITE3_ASSOC) ){
             $results['matches'] = $row['match_count'];

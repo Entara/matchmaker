@@ -1,11 +1,8 @@
-function sendDecision(name, decision) {
+function sendDecision(values) {
     $.ajax({
         type: 'POST',
         url: 'database.php',
-        data: {
-            name: name,
-            decision: decision
-        },
+        data: values,
         error: function(jqXHR, textStatus, errorThrown) {
             console.log("error!, entry in db not successfull, no matchmaking started!");
         },
@@ -17,11 +14,14 @@ function sendDecision(name, decision) {
 }
 
 function checkMatches() {
+    var currentName = $("#myform :input[name]").val();
+
     $.ajax({
         type: 'POST',
         url: 'database.php',
         data: {
             check: "yes",
+            name: currentName,
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log("error trying to check matches!");
@@ -54,8 +54,8 @@ function validateMatches(json) {
         console.log(json.matches.toString() + " matches found!");
         result = true;
     } else {
-        console.log("no matches!");
-        console.log(json.matches.toString() + " matches found!")
+        console.log("no matches found!");
+        //console.log(json.matches.toString() + " matches found!")
     }
     return result;
 }
@@ -76,8 +76,17 @@ function displaymatches(matchfound) {
 
 $(document).ready(function() {
     $(".button").click(function() {
+        var values = $('#myform').serialize();
+        sendDecision(values);
+    });
+
+    /*
+    $(".button").click(function() {
         var decision = $(this).val();
-        sendDecision("noname", decision);
+        var playerName = $("#playerName").val();
+        console.log(playerName);
+        sendDecision(playerName, decision);
         // callbacks for checking and siplaying matches
     });
+*/
 });
